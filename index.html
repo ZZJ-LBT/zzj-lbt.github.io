@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星屿服务器 - Minecraft服务器官网</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Minecraft', sans-serif;
+            background: url('backgrd.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('https://fonts.cdnfonts.com/s/30441/MinecraftRegular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        /* 头部导航栏 */
+        header {
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .logo {
+            max-width: 250px;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        /* 小屏幕手机适配 - 调整logo大小 */
+        @media (max-width: 799px) {
+            .logo {
+                width: 33.333%;
+                max-width: none;
+            }
+        }
+        
+        /* 联系服主链接 */
+        .contact-link {
+            margin-left: 20px;
+            font-size: 0.9rem;
+            color: #F015F7;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .contact-link:hover {
+            color: #ffffff;
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: rgba(0, 0, 0, 0.8);
+            margin: 15% auto;
+            padding: 30px;
+            border: 1px solid #F015F7;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(240, 21, 247, 0.3);
+        }
+        
+        .modal-title {
+            color: #F015F7;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .modal-email {
+            color: #F015F7;
+            text-decoration: underline;
+            font-size: 1.1rem;
+        }
+        
+        .close-modal {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover,
+        .close-modal:focus {
+            color: #ffffff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        
+        
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        /* 汉堡菜单按钮 */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            margin-left: auto;
+            padding: 10px;
+        }
+        
+        .menu-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .menu-icon::before {
+            content: '≡';
+        }
+        
+        /* 侧边菜单 */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1100;
+            transition: right 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .side-menu.open {
+            right: 0;
+        }
+        
+        .side-menu-content {
+            padding: 80px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .side-menu .nav-button {
+            text-align: center;
+        }
+        
+        .side-menu .nav-button a {
+            width: 100%;
+            padding: 15px;
+        }
+        
+        /* 小屏幕适配 */
+        @media (max-width: 799px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-buttons {
+                display: none;
+            }
+        }
+        
+        .nav-button {
+            text-align: center;
+        }
+        
+        .nav-button a {
+            display: block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #F015F7 0%, #d112d8 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(240, 21, 247, 0.3);
+        }
+        
+        .nav-button a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 21, 247, 0.4);
+        }
+        
+        .nav-button small {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #cccccc;
+            font-weight: normal;
+        }
+        
+        /* 底部 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            color: #999999;
+        }
+        
+        /* 页面容器 */
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding-top: 150px;
+            padding-bottom: 150px;
+        }
+        
+        /* 页面间间隔 - 特别是2和3页之间，3和4页之间 */
+        #page2 {
+            padding-bottom: 200px;
+        }
+        
+        #page3 {
+            padding-top: 200px;
+            padding-bottom: 200px;
+        }
+        
+        #page4 {
+            padding-top: 200px;
+        }
+        
+        /* 第一页特殊样式，增加高度以防止长手机看到第二页 */
+        #page1 {
+            min-height: 120vh;
+        }
+        
+        .page-content {
+            max-width: 1000px;
+            width: 90%;
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 第一页标题内容 */
+        .title-content {
+            max-width: 1000px;
+            width: 90%;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* 第一页标题 */
+        .main-title {
+            font-size: 7rem;
+            color: #F015F7;
+            text-shadow: 3px 3px 0px #000000;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #ffffff;
+            font-weight: normal;
+            text-shadow: 2px 2px 0px #000000;
+        }
+        
+        /* 第二页功能介绍 */
+        .features-container {
+            max-width: 800px;
+            width: 80%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .feature-box {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(240, 21, 247, 0.3);
+        }
+        
+        .feature-text {
+            margin-bottom: 10px;
+        }
+        
+        .feature-text h3 {
+            font-size: 0.9rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 0px #000000;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .feature-image {
+            text-align: center;
+        }
+        
+        .feature-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 手机竖屏适配 */
+        @media (orientation: portrait) {
+            .features-container {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                padding: 25px;
+            }
+            
+            .feature-box {
+                padding: 20px;
+            }
+            
+            .feature-text h3 {
+                font-size: 1rem;
+            }
+        }
+        
+        /* 翻页指示器 */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 999;
+        }
+        
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator-dot.active {
+            background: #F015F7;
+            transform: scale(1.2);
+        }
+        
+        /* 公告页面样式 */
+        .announcements-container {
+            max-width: 800px;
+            width: 90%;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .announcements-title {
+            color: #F015F7;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0px #000000;
+            text-align: center;
+        }
+        
+        .announcement-item {
+            background: rgba(240, 21, 247, 0.1);
+            border: 1px solid #F015F7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .announcement-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(240, 21, 247, 0.3);
+        }
+        
+        .announcement-date {
+            color: #F015F7;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .announcement-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        .announcement-content {
+            color: #cccccc;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 4rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .test-content {
+                font-size: 1.5rem;
+            }
+            
+            .page-content {
+                padding: 20px;
+                margin: 0 20px;
+            }
+            
+            .logo img {
+                width: 80%;
+                height: auto;
+            }
+            
+            .announcements-container {
+                padding: 20px;
+            }
+            
+            .announcements-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航栏 -->
+    <header>
+        <div class="nav-content">
+            <div class="logo">
+                <img src="title.png" alt="星屿服务器">
+            </div>
+            <!-- 联系服主链接 -->
+            <div class="contact-link" onclick="openContactModal()">联系服主</div>
+            <!-- 汉堡菜单按钮（小屏幕显示） -->
+            <div class="menu-toggle">
+                <div class="menu-icon"></div>
+            </div>
+            <!-- 导航按钮（大屏幕显示） -->
+            <div class="nav-buttons">
+                <div class="nav-button">
+                    <a href="server_status.html">服务器状态</a>
+                    <small>查看服务器在线状态</small>
+                </div>
+                <div class="nav-button">
+                    <a href="files_download.html">客户端下载</a>
+                    <small>下载Minecraft客户端</small>
+                </div>
+                <div class="nav-button">
+                    <a href="web_notice.html">查看所有公告</a>
+                    <small>查看主页未展示的公告</small>
+                </div>
+            </div>
+        </div>
+        <!-- 侧边菜单（小屏幕显示） -->
+        <div class="side-menu">
+            <div class="side-menu-content">
+                <div class="close-menu">×</div>
+                <div class="nav-button">
+                    <a href="server_status.html">服务器状态</a>
+                    <small>查看服务器在线状态</small>
+                </div>
+                <div class="nav-button">
+                    <a href="files_download.html">客户端下载</a>
+                    <small>下载Minecraft客户端</small>
+                </div>
+                <div class="nav-button">
+                    <a href="web_notice.html">查看所有公告</a>
+                    <small>查看主页未展示的公告</small>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 第一页：标题页 -->
+    <div class="page" id="page1">
+        <div class="title-content">
+            <h1 class="main-title">星屿服务器</h1>
+            <p class="subtitle">一个小游戏Minecraft服务器</p>
+        </div>
+    </div>
+    
+    <!-- 第二页：功能介绍页 -->
+    <div class="page" id="page2">
+        <div class="features-container">
+            <div class="feature-box">
+                <div class="feature-text">
+                    <h3>主城经验瓶菜单，方便快捷</h3>
+                </div>
+                <div class="feature-image">
+                    <img src="picture1.png" alt="主城经验瓶菜单">
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-text">
+                    <h3>硕大的游戏场地，想咋玩就咋玩</h3>
+                </div>
+                <div class="feature-image">
+                    <img src="picture2.png" alt="游戏场地">
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-text">
+                    <h3>星屿服务器资源包，包含动作优化与专属标题</h3>
+                </div>
+                <div class="feature-image">
+                    <img src="picture3.png" alt="服务器资源包">
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-text">
+                    <h3>感谢服务器的制作者们！（网页作者也是ns-ZZJ）</h3>
+                </div>
+                <div class="feature-image">
+                    <img src="picture4.png" alt="感谢制作者">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 第三页：指定信息页 -->
+    <div class="page" id="page3">
+        <div class="page-content">
+            <h2 style="color: #F015F7; margin-bottom: 30px;">服务器信息</h2>
+            
+            <!-- 置顶信息 -->
+            <div style="background: rgba(240, 21, 247, 0.1); border: 1px solid #F015F7; border-radius: 10px; padding: 10px; margin-bottom: 30px;">
+                <p style="margin-bottom: 10px; line-height: 1.2; font-size: 1.4rem;">服务器提供者&服主<br>ns-ZZJ</p>
+                <p style="margin-bottom: 10px; line-height: 1.2; font-size: 1.4rem;">地图制作者<br>ns-ZZJ&LuckMin</p>
+                <p style="margin-bottom: 10px; line-height: 1.2; font-size: 2rem;"><strong>地址<br>mc.ns-zzj.cn</strong></p>
+                <p style="margin-bottom: 10px; line-height: 1.2; font-size: 2rem;"><strong>端口<br>39999</strong></p>
+            </div>
+            
+            <p style="margin-bottom: 20px; line-height: 1.6;">欢迎来到星屿服务器！这是一个小游戏Minecraft服务器，我们致力于为玩家提供稳定、公平、有趣的游戏环境。</p>
+            
+            </ul>
+            <p style="line-height: 1.6;">期待与大家一起在星屿服务器创造美好的游戏回忆！</p>
+        </div>
+    </div>
+    
+    <!-- 第四页：公告页 -->
+    <div class="page" id="page4">
+        <div class="announcements-container">
+            <h2 class="announcements-title">服务器公告</h2>
+            
+            <div class="announcement-item">
+                <div class="announcement-date">2026-01-23</div>
+                <div class="announcement-title">🔧 密室杀手已经完工！</div>
+                <div class="announcement-content">
+                    密室杀手已经完工，玩家可以在游戏中遇到并解决这个神秘的问题。除了密室杀手，还有很多正在建设的小游戏！尽情期待！
+                </div>
+            </div>
+            
+            <div class="announcement-item">
+                <div class="announcement-date">2026-01-23</div>
+                <div class="announcement-title">🎉 服务器正式上线时间</div>
+                <div class="announcement-content">
+                    星屿服务器将在3月1日正式与大家见面！欢迎各位玩家加入我们的Minecraft世界，一起玩小游戏！服务器已经配置就绪，只差一些地图搭建了，期待与大家一起创造美好的游戏体验！
+                </div>
+        </div>
+    </div>
+    
+    <!-- 翻页指示器 -->
+    <div class="scroll-indicator">
+        <div class="indicator-dot active" data-page="1"></div>
+        <div class="indicator-dot" data-page="2"></div>
+        <div class="indicator-dot" data-page="3"></div>
+        <div class="indicator-dot" data-page="4"></div>
+    </div>
+    
+    <script>
+        // 翻页功能
+        let currentPage = 1;
+        const totalPages = 4;
+        let isPortrait = false;
+        let isScrolling = false;
+        let secondPageScrollTop = 0; // 存储第二页的滚动位置
+        
+        // 检测屏幕方向
+        function checkOrientation() {
+            isPortrait = window.innerHeight > window.innerWidth;
+        }
+        
+        // 检测屏幕宽度并控制导航按钮显示
+        function checkScreenWidth() {
+            const navButtons = document.querySelector('.nav-buttons');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (navButtons && menuToggle) {
+                if (window.innerWidth < 800) {
+                    navButtons.style.display = 'none';
+                    menuToggle.style.display = 'block';
+                } else {
+                    navButtons.style.display = 'flex';
+                    menuToggle.style.display = 'none';
+                    // 确保大屏幕时侧边菜单关闭
+                    const sideMenu = document.querySelector('.side-menu');
+                    if (sideMenu) {
+                        sideMenu.classList.remove('open');
+                    }
+                }
+            }
+        }
+        
+        // 初始化汉堡菜单功能
+        function initMenuToggle() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const closeMenu = document.querySelector('.close-menu');
+            const sideMenu = document.querySelector('.side-menu');
+            
+            if (menuToggle && closeMenu && sideMenu) {
+                // 打开侧边菜单
+                menuToggle.addEventListener('click', function() {
+                    sideMenu.classList.add('open');
+                });
+                
+                // 关闭侧边菜单
+                closeMenu.addEventListener('click', function() {
+                    sideMenu.classList.remove('open');
+                });
+                
+                // 点击侧边菜单外部关闭菜单
+                sideMenu.addEventListener('click', function(e) {
+                    if (e.target === sideMenu) {
+                        sideMenu.classList.remove('open');
+                    }
+                });
+            }
+        }
+        
+        // 动态调整公告栏尺寸
+        function adjustAnnouncementsSize() {
+            const header = document.querySelector('header');
+            const announcementsContainer = document.querySelector('.announcements-container');
+            
+            if (header && announcementsContainer) {
+                // 获取窗口尺寸
+                const windowWidth = window.innerWidth;
+                
+                // 根据屏幕宽度调整公告栏宽度
+                if (windowWidth < 600) {
+                    // 窄屏
+                    announcementsContainer.style.width = '95%';
+                } else if (windowWidth < 1000) {
+                    // 中屏
+                    announcementsContainer.style.width = '90%';
+                } else {
+                    // 宽屏
+                    announcementsContainer.style.width = '85%';
+                    announcementsContainer.style.maxWidth = '900px';
+                }
+                
+                // 移除高度限制，让容器根据内容自动调整高度
+                announcementsContainer.style.minHeight = '300px'; // 最小高度
+                announcementsContainer.style.maxHeight = 'none'; // 移除最大高度限制
+                
+                // 确保内容完整显示
+                announcementsContainer.style.overflowY = 'visible';
+                
+                // 调整内边距，确保在小屏幕上也有合适的间距
+                if (windowWidth < 600) {
+                    announcementsContainer.style.padding = '20px';
+                } else {
+                    announcementsContainer.style.padding = '40px';
+                }
+            }
+        }
+        
+        // 获取设备像素比相关的阈值
+        function getScrollThreshold() {
+            // 简化阈值设置，让翻页更自然
+            return 50;
+        }
+        
+        // 初始化时检测
+        checkOrientation();
+        checkScreenWidth();
+        initMenuToggle();
+        adjustAnnouncementsSize();
+        // 窗口大小改变时重新检测
+        window.addEventListener('resize', function() {
+            checkOrientation();
+            checkScreenWidth();
+            adjustAnnouncementsSize();
+        });
+        
+        // 滚动到指定页面
+        function scrollToPage(pageNumber) {
+            if (isScrolling) return;
+            isScrolling = true;
+            const page = document.getElementById(`page${pageNumber}`);
+            if (page) {
+                // 计算滚动位置
+                let scrollPosition;
+                
+                // 当从第三页返回第二页时，滚动到第二页底部
+                if (currentPage === 3 && pageNumber === 2) {
+                    // 计算第二页底部位置
+                    scrollPosition = page.offsetTop + page.offsetHeight - window.innerHeight * 1.2;
+                    // 确保位置不小于页面顶部
+                    scrollPosition = Math.max(scrollPosition, page.offsetTop);
+                } else {
+                    // 其他情况滚动到页面顶部
+                    scrollPosition = page.offsetTop;
+                }
+                
+                // 滚动到指定位置
+                window.scrollTo({
+                    top: scrollPosition,
+                    behavior: 'smooth'
+                });
+                currentPage = pageNumber;
+                updateIndicators();
+                
+                // 滚动结束后重置标志
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 1000);
+            }
+        }
+        
+        // 更新指示器状态
+        function updateIndicators() {
+            const dots = document.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                if (index + 1 === currentPage) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        // 指示器点击事件
+        document.querySelectorAll('.indicator-dot').forEach(dot => {
+            dot.addEventListener('click', function() {
+                const page = parseInt(this.getAttribute('data-page'));
+                scrollToPage(page);
+            });
+        });
+        
+        // 鼠标滚轮事件
+        window.addEventListener('wheel', function(e) {
+            if (isScrolling) return; // 避免滚动动画时的冲突
+            
+            // 检查是否需要在第二页使用翻页功能
+            const needPage2Scroll = checkPage2ScrollNeed();
+            
+            // 竖屏模式下的特殊处理
+            if (isPortrait) {
+                // 在第一页时，向下滚动到第二页
+                if (currentPage === 1 && e.deltaY > 0) {
+                    e.preventDefault();
+                    scrollToPage(2);
+                }
+                // 在第二页时
+                else if (currentPage === 2) {
+                    const page2 = document.getElementById('page2');
+                    const pageHeight = page2.offsetHeight;
+                    const windowHeight = window.innerHeight;
+                    const threshold = getScrollThreshold();
+                    
+                    // 计算翻页阈值
+                    const topThreshold = page2.offsetTop + threshold;
+                    const bottomThreshold = page2.offsetTop + pageHeight - windowHeight;
+                    
+                    // 如果需要翻页功能
+                    if (needPage2Scroll) {
+                        // 向上滚动且在页面顶部附近，返回第一页
+                        if (e.deltaY < 0 && window.scrollY <= topThreshold) {
+                            e.preventDefault();
+                            scrollToPage(1);
+                        }
+                        // 向下滚动，滚动到第三页顶部
+                        else if (e.deltaY > 0 && window.scrollY >= bottomThreshold) {
+                            e.preventDefault();
+                            scrollToPage(3);
+                        }
+                    } else {
+                        // 如果不需要翻页功能，允许自由滚动
+                        // 但在滚动到页面底部时，仍然可以滚动到第三页
+                        if (e.deltaY > 0 && window.scrollY >= bottomThreshold) {
+                            e.preventDefault();
+                            scrollToPage(3);
+                        }
+                        // 在页面顶部时，仍然可以滚动到第一页
+                        else if (e.deltaY < 0 && window.scrollY <= topThreshold) {
+                            e.preventDefault();
+                            scrollToPage(1);
+                        }
+                    }
+                }
+                // 在第三页时，全程自动翻页
+                else if (currentPage === 3) {
+                    // 向上滚动，直接返回第二页
+                    if (e.deltaY < 0) {
+                        e.preventDefault();
+                        scrollToPage(2);
+                    }
+                    // 向下滚动，直接进入第四页
+                    else if (e.deltaY > 0) {
+                        e.preventDefault();
+                        scrollToPage(4);
+                    }
+                }
+                // 在第四页时，允许自由滚动
+                else if (currentPage === 4) {
+                    const page4 = document.getElementById('page4');
+                    const threshold = getScrollThreshold();
+                    
+                    // 计算翻页阈值
+                    const topThreshold = page4.offsetTop + threshold;
+                    
+                    // 向上滚动且在页面顶部附近，返回第三页
+                    if (e.deltaY < 0 && window.scrollY <= topThreshold) {
+                        e.preventDefault();
+                        scrollToPage(3);
+                    }
+                    // 向下滚动时允许自由滚动
+                }
+            } else {
+                // 横屏模式下使用阶段式翻页
+                e.preventDefault();
+                if (e.deltaY > 0) {
+                    // 向下滚动
+                    if (currentPage < totalPages && currentPage < 4) {
+                        scrollToPage(currentPage + 1);
+                    }
+                } else {
+                    // 向上滚动
+                    if (currentPage > 1) {
+                        scrollToPage(currentPage - 1);
+                    }
+                }
+            }
+        }, { passive: false });
+        
+        // 触摸事件（移动设备）
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        function handleTouchStart(e) {
+            touchStartY = e.changedTouches[0].screenY;
+        }
+        
+        function handleTouchEnd(e) {
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }
+        
+        function handleSwipe() {
+            if (isScrolling) return; // 避免滚动动画时的冲突
+            
+            // 检查是否需要在第二页使用翻页功能
+            const needPage2Scroll = checkPage2ScrollNeed();
+            
+            const swipeDistance = Math.abs(touchEndY - touchStartY);
+            
+            // 竖屏模式下的特殊处理
+            if (isPortrait) {
+                // 在第一页时，向下滑动到第二页顶部
+                if (currentPage === 1 && touchEndY < touchStartY - 50) {
+                    scrollToPage(2);
+                }
+                // 在第二页时
+                else if (currentPage === 2) {
+                    const page2 = document.getElementById('page2');
+                    const pageHeight = page2.offsetHeight;
+                    const windowHeight = window.innerHeight;
+                    const threshold = getScrollThreshold();
+                    
+                    // 计算翻页阈值
+                    const topThreshold = page2.offsetTop + threshold;
+                    const bottomThreshold = page2.offsetTop + pageHeight - windowHeight;
+                    
+                    // 如果需要翻页功能
+                    if (needPage2Scroll) {
+                        // 向上滑动且在页面顶部附近，返回第一页
+                        if (touchEndY > touchStartY + 50 && window.scrollY <= topThreshold) {
+                            scrollToPage(1);
+                        }
+                        // 向下滑动，滚动到第三页顶部
+                        else if (touchEndY < touchStartY - 50 && window.scrollY >= bottomThreshold) {
+                            scrollToPage(3);
+                        }
+                    } else {
+                        // 如果不需要翻页功能，允许自由滚动
+                        // 但在滚动到页面底部时，仍然可以滚动到第三页
+                        if (touchEndY < touchStartY - 50 && window.scrollY >= bottomThreshold) {
+                            scrollToPage(3);
+                        }
+                        // 在页面顶部时，仍然可以滚动到第一页
+                        else if (touchEndY > touchStartY + 50 && window.scrollY <= topThreshold) {
+                            scrollToPage(1);
+                        }
+                    }
+                }
+                // 在第三页时，全程自动翻页
+                else if (currentPage === 3) {
+                    // 向上滑动，直接返回第二页
+                    if (touchEndY > touchStartY + 50) {
+                        scrollToPage(2);
+                    }
+                    // 向下滑动，直接进入第四页
+                    else if (touchEndY < touchStartY - 50) {
+                        scrollToPage(4);
+                    }
+                }
+                // 在第四页时，允许自由滚动
+                else if (currentPage === 4) {
+                    const page4 = document.getElementById('page4');
+                    const threshold = getScrollThreshold();
+                    
+                    // 计算翻页阈值
+                    const topThreshold = page4.offsetTop + threshold;
+                    
+                    // 向上滑动且在页面顶部附近，返回第三页
+                    if (touchEndY > touchStartY + 50 && window.scrollY <= topThreshold) {
+                        scrollToPage(3);
+                    }
+                    // 向下滑动时允许自由滚动
+                }
+            } else {
+                // 横屏模式下使用阶段式翻页
+                if (touchEndY < touchStartY - 50) {
+                    // 向上滑动
+                    if (currentPage < totalPages && currentPage < 4) {
+                        scrollToPage(currentPage + 1);
+                    }
+                }
+                if (touchEndY > touchStartY + 50) {
+                    // 向下滑动
+                    if (currentPage > 1) {
+                        scrollToPage(currentPage - 1);
+                    }
+                }
+            }
+        }
+        
+        window.addEventListener('touchstart', handleTouchStart, false);
+        window.addEventListener('touchend', handleTouchEnd, false);
+        
+        // 检测是否需要在第二页使用翻页功能
+        function checkPage2ScrollNeed() {
+            const page2 = document.getElementById('page2');
+            if (page2) {
+                const page2Height = page2.offsetHeight;
+                const windowHeight = window.innerHeight;
+                // 如果窗口高度大于等于第二页高度的90%，则认为不需要翻页
+                return windowHeight < page2Height * 0.9;
+            }
+            return true;
+        }
+        
+        // 滚动监听，更新当前页面并记录第二页的滚动位置
+        window.addEventListener('scroll', function() {
+            if (isScrolling) return; // 避免滚动动画时的冲突
+            
+            const scrollPosition = window.scrollY + window.innerHeight / 2;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const page = document.getElementById(`page${i}`);
+                if (page) {
+                    const pageTop = page.offsetTop;
+                    const pageBottom = pageTop + page.offsetHeight;
+                    
+                    if (scrollPosition >= pageTop && scrollPosition <= pageBottom) {
+                        if (currentPage !== i) {
+                            currentPage = i;
+                            updateIndicators();
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+        
+        // 打开联系服主弹窗
+        function openContactModal() {
+            const modal = document.getElementById('contactModal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+        
+        // 关闭弹窗
+        function closeContactModal() {
+            const modal = document.getElementById('contactModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('contactModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    
+    <!-- 联系服主弹窗 -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeContactModal()">&times;</span>
+            <h3 class="modal-title">服主信息</h3>
+            <div class="modal-body">
+                <p>邮箱：<a href="mailto:ns-zzj@outlook.com" class="modal-email">ns-zzj@outlook.com</a></p>
+                <p style="margin-top: 15px;">点击邮箱地址即可发送邮件联系服主</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
